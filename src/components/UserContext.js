@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
     users: [],
     loading: false,
     //get single user
-    user: null,
+    user: {},
     repos: [],
   };
   //empty array is going to destructuring the array
