@@ -1,20 +1,24 @@
 import { useState, useContext } from "react";
 import UserContext from "./UserContext";
 import AlertContext from "./AlertContext";
+import { searchUsers } from "./UserAction";
 
 function UserSearch() {
   // 1. Import the UserContext and AlertContext
-  const { users, searchUsers, clearUsers } = useContext(UserContext);
+  const { users, dispatch } = useContext(UserContext);
   const { setAlert } = useContext(AlertContext);
 
   const [text, setText] = useState("");
   const handleChange = (e) => setText(e.target.value);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (text === "") {
       setAlert("Please enter something", "error");
     } else {
-      searchUsers(text);
+      dispatch({ type: "SET_LOADING" });
+      const users = await searchUsers(text);
+      console.log(users);
+      dispatch({ type: "FETCH_USERS", payload: users });
       setText("");
     }
   };
@@ -44,7 +48,12 @@ function UserSearch() {
       {/* 如果有users才顯示clear button */}
       {users.length > 0 && (
         <div>
-          <button onClick={clearUsers} className="btn btn-ghost btn-lg">
+          <button
+            onClick={() => {
+              dispatch({ type: "CLEAR_USERS" });
+            }}
+            className="btn btn-ghost btn-lg"
+          >
             Clear
           </button>
         </div>

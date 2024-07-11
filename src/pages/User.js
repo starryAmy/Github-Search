@@ -6,9 +6,21 @@ import Spinner from "../components/Spinner";
 import UserContext from "../components/UserContext";
 import RepoList from "../components/RepoList";
 import "../index.css";
+import { getUser, getRepos } from "../components/UserAction";
 
 function User() {
-  const { getUser, user, loading, getRepos, repos } = useContext(UserContext);
+  const { user, dispatch, loading, repos } = useContext(UserContext);
+  const params = useParams();
+  useEffect(() => {
+    const getUserData = async () => {
+      const user = await getUser(params.login);
+      dispatch({ type: "GET_USER", payload: user });
+
+      const repos = await getRepos(params.login);
+      dispatch({ type: "GET_REPOS", payload: repos });
+    };
+    getUserData();
+  }, []);
   const {
     name,
     type,
@@ -25,15 +37,6 @@ function User() {
     public_gists,
     hireable,
   } = user;
-  const params = useParams();
-  useEffect(() => {
-    getUser(params.login);
-    console.log(user);
-    getRepos(params.login);
-    console.log(repos);
-    console.log(repos);
-  }, []);
-
   if (loading) {
     return <Spinner />;
   }
