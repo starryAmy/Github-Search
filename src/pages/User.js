@@ -6,18 +6,15 @@ import Spinner from "../components/Spinner";
 import UserContext from "../components/UserContext";
 import RepoList from "../components/RepoList";
 import "../index.css";
-import { getUser, getRepos } from "../components/UserAction";
+import { getUserAndRepos } from "../components/UserAction";
 
 function User() {
   const { user, dispatch, loading, repos } = useContext(UserContext);
   const params = useParams();
   useEffect(() => {
     const getUserData = async () => {
-      const user = await getUser(params.login);
-      dispatch({ type: "GET_USER", payload: user });
-
-      const repos = await getRepos(params.login);
-      dispatch({ type: "GET_REPOS", payload: repos });
+      const user = await getUserAndRepos(params.login);
+      dispatch({ type: "GET_USER_REPOS", payload: user });
     };
     getUserData();
   }, []);
