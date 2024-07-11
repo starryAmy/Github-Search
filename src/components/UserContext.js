@@ -90,14 +90,11 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-        users: state.users,
-        loading: state.loading,
+        ...state,
         searchUsers,
         clearUsers,
         getUser,
         getRepos,
-        user: state.user,
-        repos: state.repos,
       }}
     >
       {children}
